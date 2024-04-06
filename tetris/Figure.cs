@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -13,8 +13,6 @@ namespace tetris
         public int oy;
         public char[,] pic = new char[4, 4];
         public int[] heigts;
-        public int[] widthsr;
-        public int[] widthsl;
         public int[,] xs;
         public int[,] ys;
         public char symbol = '░';
@@ -40,8 +38,6 @@ namespace tetris
             for (int i = 0; i < 4; i++)
                 this.pic[0, i] = symbol;
             this.heigts = new int[] { 1, 1, 1, 1 };
-            this.widthsr = new int[] { 4 };
-            this.widthsl = new int[] { 1 };
             this.xs = new int[,] { { 0, 1, 2, 3 }, { 0, 0, 0, 0 } };
             this.ys = new int[,] { { 0, 0, 0, 0 }, { 0, 1, 2, 3 } };
         }
@@ -54,16 +50,12 @@ namespace tetris
                 for (int i = 0; i < 4; i++)
                     this.pic[0, i] = symbol;
                 this.heigts = new int[] { 1, 1, 1, 1 };
-                this.widthsr = new int[] { 4 };
-                this.widthsl = new int[] { 1 };
             }
             else
             {
                 for (int i = 0; i < 4; i++)
                     this.pic[i, 0] = symbol;
                 this.heigts = new int[] { 4 };
-                this.widthsr = new int[] { 1, 1, 1, 1 };
-                this.widthsl = new int[] { 1, 1, 1, 1 };
             }
         }
     }
@@ -76,8 +68,6 @@ namespace tetris
                 for (int j = 0; j < 2; j++)
                     this.pic[i, j] = symbol;
             this.heigts = new int[] { 2, 2 };
-            this.widthsr = new int[] { 2, 2 };
-            this.widthsl = new int[] { 1, 1 };
             this.xs = new int[,] { { 0, 0, 1, 1 } };
             this.ys = new int[,] { { 0, 1, 0, 1 } };
         }
@@ -92,8 +82,6 @@ namespace tetris
             for (int i = 0; i < 3; i++)
                 this.pic[i, 1] = symbol;
             this.heigts = new int[] { 1, 3 };
-            this.widthsr = new int[] { 2, 2, 2 };
-            this.widthsl = new int[] {1, 0, 0 };
             this.xs = new int[,] { { 0, 1, 1, 1 }, { 2, 0, 1, 2}, { 0, 0, 0, 1}, { 0, 1, 2, 0} };
             this.ys = new int[,] { { 0, 0, 1, 2 }, { 0, 1, 1, 1}, { 0, 1, 2, 2}, { 1, 0, 0, 0 } };
         }
@@ -108,32 +96,24 @@ namespace tetris
                     for (int i = 0; i < 3; i++)
                         this.pic[i, 1] = symbol;
                     this.heigts = new int[] { 1, 3 };
-                    this.widthsr = new int[] { 2, 2, 2 };
-                    this.widthsl = new int[] { 1, 0, 0 };
                     break;
                 case 1:
                     this.pic[0, 2] = symbol;
                     for (int i = 0; i < 3; i++)
                         this.pic[1, i] = symbol;
                     this.heigts = new int[] { 2, 2, 2 };
-                    this.widthsr = new int[] { 3, 3 };
-                    this.widthsl = new int[] { -1, 1 };
                     break;
                 case 2:
                     this.pic[2, 1] = symbol;
                     for (int i = 0; i < 3; i++)
                         this.pic[i, 0] = symbol;
                     this.heigts = new int[] { 3, 3 };
-                    this.widthsr = new int[] { 1, 1, 2 };
-                    this.widthsl = new int[] { 1, 1, 1 };
                     break;
                 default:
                     this.pic[1, 0] = symbol;
                     for (int i = 0; i < 3; i++)
                         this.pic[0, i] = symbol;
                     this.heigts = new int[] { 2, 1, 1 };
-                    this.widthsr = new int[] { 3, 1 };
-                    this.widthsl = new int[] { 1, 1 };
                     break;
 
             }
@@ -148,8 +128,6 @@ namespace tetris
             for (int i = 0; i < 3; i++)
                 this.pic[i, 0] = symbol;
             this.heigts = new int[] { 3, 1 };
-            this.widthsr = new int[] { 2, 1, 1 };
-            this.widthsl = new int[] { 1, 1, 1 };
             this.xs = new int[,] { { 0, 1, 0, 0 }, { 0, 1, 2, 2 }, { 1, 1, 0, 1}, { 0, 0, 1, 2 } };
             this.ys = new int[,] { { 0, 0, 1, 2 }, { 0, 0, 0, 1 }, { 0, 1, 2, 2}, { 0, 1, 1, 1 } };
         }
@@ -164,32 +142,24 @@ namespace tetris
                     for (int i = 0; i < 3; i++)
                         this.pic[i, 0] = symbol;
                     this.heigts = new int[] { 3, 1 };
-                    this.widthsr = new int[] { 2, 1, 1 };
-                    this.widthsl = new int[] { 1, 1, 1 };
                     break;
                 case 1:
                     this.pic[1, 2] = symbol;
                     for (int i = 0; i < 3; i++)
                         this.pic[0, i] = symbol;
                     this.heigts = new int[] { 1, 1, 2 };
-                    this.widthsr = new int[] { 3, 3 };
-                    this.widthsl = new int[] { 1, -1 };
                     break;
                 case 2:
                     this.pic[2, 0] = symbol;
                     for (int i = 0; i < 3; i++)
                         this.pic[i, 1] = symbol;
                     this.heigts = new int[] { 3, 3 };
-                    this.widthsr = new int[] { 2, 2, 2 };
-                    this.widthsl = new int[] { 0, 0, 1 };
                     break;
                 default:
                     this.pic[0, 0] = symbol;
                     for (int i = 0; i < 3; i++)
                         this.pic[1, i] = symbol;
                     this.heigts = new int[] { 2, 2, 2 };
-                    this.widthsr = new int[] { 1, 3 };
-                    this.widthsl = new int[] { 1, 1 };
                     break;
 
             }
@@ -205,8 +175,6 @@ namespace tetris
             this.pic[1, 1] = symbol;
             this.pic[1, 2] = symbol;
             this.heigts = new int[] { 1, 2, 2 };
-            this.widthsr = new int[] { 2, 3 };
-            this.widthsl = new int[] { 1, 0 };
             this.xs = new int[,] { { 0, 1, 1, 2}, { 1, 0, 1, 0 } };
             this.ys = new int[,] { { 0, 0, 1, 1}, { 0, 1, 1, 2 } };
         }
@@ -221,8 +189,6 @@ namespace tetris
                 this.pic[1, 1] = symbol;
                 this.pic[1, 2] = symbol;
                 this.heigts = new int[] { 1, 2, 2 };
-                this.widthsr = new int[] { 2, 3 };
-                this.widthsl = new int[] { 1, 0 };
             }
             else
             {
@@ -231,8 +197,6 @@ namespace tetris
                 this.pic[1, 1] = symbol;
                 this.pic[2, 0] = symbol;
                 this.heigts = new int[] { 3, 2 };
-                this.widthsr = new int[] { 2, 2, 1 };
-                this.widthsl = new int[] { 0, 1, 1 };
             }
         }
     }
@@ -247,8 +211,6 @@ namespace tetris
             this.pic[1, 0] = symbol;
             this.pic[1, 1] = symbol;
             this.heigts = new int[] { 2, 2, 1 };
-            this.widthsr = new int[] { 3, 2 };
-            this.widthsl = new int[] { 0, 1 };
             this.xs = new int[,] { { 1, 2, 0, 1 }, { 0, 0, 1, 1 } };
             this.ys = new int[,] { { 0, 0, 1, 1 }, { 0, 1, 1, 2 } };
         }
@@ -263,8 +225,6 @@ namespace tetris
                 this.pic[1, 0] = symbol;
                 this.pic[1, 1] = symbol;
                 this.heigts = new int[] { 2, 2, 1 };
-                this.widthsr = new int[] { 3, 2 };
-                this.widthsl = new int[] { 0, 1 };
             }
             else
             {
@@ -273,8 +233,6 @@ namespace tetris
                 this.pic[1, 1] = symbol;
                 this.pic[2, 1] = symbol;
                 this.heigts = new int[] { 2, 3 };
-                this.widthsr = new int[] { 1, 2, 2 };
-                this.widthsl = new int[] { 1, 1, 0 };
             }
         }
     }
@@ -288,8 +246,6 @@ namespace tetris
             this.pic[1, 1] = symbol;
             this.pic[1, 2] = symbol;
             this.heigts = new int[] { 2, 2, 2 };
-            this.widthsr = new int[] { 2, 3 };
-            this.widthsl = new int[] { 0, 1 };
             this.xs = new int[,] { { 1, 0, 1, 2 }, { 0, 0, 1, 0 }, { 0, 1, 2, 1 }, { 1, 0, 1, 1 } };
             this.ys = new int[,] { { 0, 1, 1, 1 }, { 0, 1, 1, 2 }, { 0, 0, 0, 1 }, { 0, 1, 1, 2 } };
         }
@@ -305,8 +261,6 @@ namespace tetris
                     this.pic[1, 1] = symbol;
                     this.pic[1, 2] = symbol;
                     this.heigts = new int[] { 2, 2, 2 };
-                    this.widthsr = new int[] { 2, 3 };
-                    this.widthsl = new int[] { 0, 1 };
                     break;
                 case 1:
                     this.pic[0, 0] = symbol;
@@ -314,8 +268,6 @@ namespace tetris
                     this.pic[1, 1] = symbol;
                     this.pic[2, 0] = symbol;
                     this.heigts = new int[] { 3, 2 };
-                    this.widthsr = new int[] { 1, 2, 1 };
-                    this.widthsl = new int[] { 1, 1, 1 };
                     break;
                 case 2:
                     this.pic[0, 0] = symbol;
@@ -323,8 +275,6 @@ namespace tetris
                     this.pic[0, 2] = symbol;
                     this.pic[1, 1] = symbol;
                     this.heigts = new int[] { 1, 2, 1 };
-                    this.widthsr = new int[] { 3, 2 };
-                    this.widthsl = new int[] { 1, 0 };
                     break;
                 default:
                     this.pic[0, 1] = symbol;
@@ -332,8 +282,6 @@ namespace tetris
                     this.pic[1, 1] = symbol;
                     this.pic[2, 1] = symbol;
                     this.heigts = new int[] { 2, 3 };
-                    this.widthsr = new int[] { 2, 2, 2 };
-                    this.widthsl = new int[] { 0, 1, 0 };
                     break;
 
             }
