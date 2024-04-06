@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -93,7 +93,7 @@ namespace tetris
                         //Console.Clear();
                         Console.SetCursorPosition(0, 0);
                         OutPut();
-                        Thread.Sleep(10);
+                        Thread.Sleep(5);
                     }
                     
                     //Console.Clear();
@@ -183,9 +183,10 @@ namespace tetris
         private bool AbleToMoveRight(Shape shape)
         {
             bool ans = true;
-            for (int i = 0; i < shape.widthsr.Length; i++)
+            for (int i = 0; i < 4; i++)
             {
-                char c = matrix[shape.oy + i, shape.ox + shape.widthsr[i]];
+                char c = matrix[shape.oy + shape.ys[shape.index, i],
+                    shape.ox + shape.xs[shape.index, i] + 1];
                 ans = ans && c != shape.symbol && c != wall;
             }
             return ans;
@@ -193,9 +194,10 @@ namespace tetris
         private bool AbleToMoveLeft(Shape shape)
         {
             bool ans = true;
-            for (int i = 0; i < shape.widthsl.Length; i++)
+            for (int i = 0; i < 4; i++)
             {
-                char c = matrix[shape.oy + i, shape.ox - shape.widthsl[i]];
+                char c = matrix[shape.oy + shape.ys[shape.index, i],
+                    shape.ox + shape.xs[shape.index, i] - 1];
                 ans = ans && c != shape.symbol && c != wall;
             }
             return ans;
