@@ -180,7 +180,6 @@ namespace tetris
                 Console.ReadKey(intercept: true);
             }
         }
-        
         private bool AbleToRotate(Shape shape)
         {
             bool ans = true;
