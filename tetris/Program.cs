@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -11,16 +11,18 @@ namespace tetris
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Введите высоту (рекомендованно 30)...");
+            //input
+            Console.WriteLine("Write hight (recommended 30)...");
             int hight = int.Parse(Console.ReadLine());
-            Console.WriteLine("и длину тетриса (рекомендованно 50)...");
+            Console.WriteLine("and width of tetris (recommended 20)...");
             int width = int.Parse(Console.ReadLine());
-            Console.SetWindowSize(width + 2, hight + 5);
+            
             Display display = new Display(width, hight);
+
+            Console.SetWindowSize((width + 2) * display.matrix.ratioX, (hight + 5) * display.matrix.ratioY);
+
             display.StartGame();
-            //Square square = new Square(38, 40);
-            //Console.WriteLine(display.matrix[2, 2]);
-            //9608
+
         }
     }
 }
