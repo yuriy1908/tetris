@@ -22,13 +22,7 @@ namespace tetris
             this.ox = ox;
             this.oy = oy;
         }
-        public void Clear()
-        {
-            for (int i = 0; i < 4; i++)
-                for (int j = 0; j < 4; j++)
-                    pic[i, j] = (char)0;
         }
-    }
     public class Stick: Shape
     {
         public Stick(int ox, int oy)
