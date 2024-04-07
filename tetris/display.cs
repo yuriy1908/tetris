@@ -1,7 +1,9 @@
+using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Messaging;
 using System.Security.AccessControl;
 using System.Text;
@@ -12,47 +14,77 @@ using System.Xml.Schema;
 
 namespace tetris
 {
+    public class Matrix
+    {
+        public char[,] array;
+        public int ratioX = 2;
+        public int ratioY = 1;
+        private char wall = (char)9608;
+        private int width;
+        private int height;
+        public Matrix(int width, int height) 
+        {
+            this.width = width;
+            this.height = height;
+            array = new char[(height + 4) * ratioY, (width+4)*ratioX];
+            for (int i = 0; i < width; i++)
+                Point(i, 0, wall);
+            for (int i = 0; i < height; i++)
+                Point(0, i, wall);
+            for (int i = 0; i < width; i++)
+                Point(i, height - 1, wall);
+            for (int i = 0; i < height; i++)
+                Point(width - 1, i, wall);
+        }
+        public char CheckPoint(int x, int y)
+        {
+            return array[y * ratioY, x * ratioX];
+        }
+        public void Point(int x, int y, char c)
+        {
+            for (int i = 0; i < ratioY; i++)
+                for (int j = 0; j < ratioX; j++)
+                    array[y * ratioY + i, x * ratioX + j] = c;
+        }
+        public void Draw(Shape shape)
+        {
+            for (int i = 0; i < 4; i++)
+                Point(shape.ox + shape.xs[shape.index, i], 
+                      shape.oy + shape.ys[shape.index, i], shape.symbol);
+        }
+        public void Clear(Shape shape)
+        {
+            for (int i = 0; i < 4; i++)
+                Point(shape.ox + shape.xs[shape.index, i], 
+                      shape.oy + shape.ys[shape.index, i], ' ');
+        }
+        public void OutPut(string info)
+        {
+            for (int i = 0; i < height * ratioY; i++)
+            {
+                for (int j = 0; j < width * ratioX; j++)
+                    Console.Write(array[i, j]);
+                Console.WriteLine();
+            }
+            Console.Write(info);
+            //
+        }
+    }
+
     public class Display
     {
         private int width;
         private int height;
-        public char[,] matrix;
+        public Matrix matrix;
         private char wall = (char)9608;
         private int speed = 600;
         private int score = 0;
+        private string info = $"Total score:0\nRotate: TAB\nMoves: Arrows";
         public Display(int width, int height)
         {
             this.width = width;
             this.height = height;
-            ClearMatrix();
-        }
-
-        private void ClearMatrix()
-        {
-            matrix = new char[height+4, width+4];
-            for (int i = 0; i < width; i++)
-                matrix[0, i] = wall;
-            for (int i = 0; i < height; i++)
-                matrix[i, 0] = wall;
-            for (int i = 0; i < width; i++)
-                matrix[height - 1, i] = wall;
-            for (int i = 0; i < height; i++)
-                matrix[i, width - 1] = wall;;
-
-        }
-        private void Draw(Shape shape)
-        {
-            for (int i = 0; i < 4; i++)
-                for (int j = 0; j < 4; j++)
-                    if (shape.pic[i, j] == shape.symbol)
-                        matrix[shape.oy+i, shape.ox+j] = shape.pic[i, j];
-        }
-        private void Clear(Shape shape)
-        {
-            for (int i = 0; i < 4; i++)
-                for (int j = 0; j < 4; j++)
-                    if (shape.pic[i, j] == shape.symbol)
-                        matrix[shape.oy + i, shape.ox + j] = ' ';
+            matrix = new Matrix(width, height);
         }
         private Shape GenerateFig()
         {
@@ -79,36 +111,37 @@ namespace tetris
                 //Shape shape = new Square(width / 2, 1);
                 while (AbleToDrop(shape))
                 {
-                    Clear(shape);
+                    matrix.Clear(shape);
                     if (AbleToDrop(shape))
                         shape.oy++;
-                    Draw(shape);
+                    matrix.Draw(shape);
                     gameStoped = false;
                     DateTime startTime = DateTime.Now;
                     while (DateTime.Now - startTime < TimeSpan.FromMilliseconds(speed))
                     {
-                        Clear(shape);
+                        matrix.Clear(shape);
                         MoveFigure(shape);
-                        Draw(shape);
+                        matrix.Draw(shape);
                         //Console.Clear();
                         Console.SetCursorPosition(0, 0);
-                        OutPut();
+                        matrix.OutPut(info);
                         Thread.Sleep(5);
                     }
                     
                     //Console.Clear();
                     Console.SetCursorPosition(0, 0);
-                    OutPut();
+                    matrix.OutPut(info);
                 }
                 CheckLinesAndDrop(shape);
+                info = $"Total score:{score}\nRotate: TAB\nMoves: Arrows";
                 if (gameStoped)
                 {
-                    ClearMatrix();
+                    matrix = new Matrix(width, height);
                     string massage = "Game over!";
                     for (int i = 0; i < massage.Length; i++)
-                        matrix[height/2, i+(width/ massage.Length * 4)] = massage[i];
+                        matrix.array[(height * matrix.ratioY)/2, i+((width * matrix.ratioX)/ massage.Length * 4)] = massage[i];
                     Console.SetCursorPosition(0, 0);
-                    OutPut();
+                    matrix.OutPut("");
                     return;
                 }
 
@@ -147,25 +180,14 @@ namespace tetris
                 Console.ReadKey(intercept: true);
             }
         }
-        private void OutPut()
-        {
-            string info = $"Total score:{score}\nУправление стрелочками и TAB\nВыйти Esc\n";
-            for (int i = 0; i < height+1; i++)
-            {
-                for (int j = 0; j < width; j++)
-                    Console.Write(matrix[i, j]);
-                Console.WriteLine();
-            }
-            Console.Write(info);
-            //
-        }
+        
         private bool AbleToRotate(Shape shape)
         {
             bool ans = true;
             for (int i = 0; i < 4; i++)
             {
-                char c = matrix[shape.oy + shape.ys[(shape.index+1) % (shape.ys.Length/4), i], 
-                    shape.ox + shape.xs[(shape.index + 1) % (shape.xs.Length / 4), i]];
+                char c = matrix.CheckPoint(shape.ox + shape.xs[(shape.index + 1) % (shape.xs.Length / 4), i],
+                    shape.oy + shape.ys[(shape.index+1) % (shape.ys.Length/4), i]);
                 ans = ans && c != shape.symbol && c != wall;
             }
             return ans;
@@ -175,7 +197,7 @@ namespace tetris
             bool ans = true;
             for (int i = 0; i < shape.heigts.Length; i++)
             {
-                char c = matrix[shape.oy + shape.heigts[i], shape.ox + i];
+                char c = matrix.CheckPoint(shape.ox + i, shape.oy + shape.heigts[i]);
                 ans = ans && c != shape.symbol && c != wall;
             }
             return ans;
@@ -185,8 +207,8 @@ namespace tetris
             bool ans = true;
             for (int i = 0; i < 4; i++)
             {
-                char c = matrix[shape.oy + shape.ys[shape.index, i],
-                    shape.ox + shape.xs[shape.index, i] + 1];
+                char c = matrix.CheckPoint(shape.ox + shape.xs[shape.index, i] + 1,
+                    shape.oy + shape.ys[shape.index, i]);
                 ans = ans && c != shape.symbol && c != wall;
             }
             return ans;
@@ -196,8 +218,8 @@ namespace tetris
             bool ans = true;
             for (int i = 0; i < 4; i++)
             {
-                char c = matrix[shape.oy + shape.ys[shape.index, i],
-                    shape.ox + shape.xs[shape.index, i] - 1];
+                char c = matrix.CheckPoint(shape.ox + shape.xs[shape.index, i] - 1,
+                    shape.oy + shape.ys[shape.index, i]);
                 ans = ans && c != shape.symbol && c != wall;
             }
             return ans;
@@ -209,7 +231,7 @@ namespace tetris
             {
                 int count = 0;
                 for (int j = 1; j < width - 1; j++)
-                    if (matrix[i, j] == shape.symbol)
+                    if (matrix.CheckPoint(j, i) == shape.symbol)
                     {
                         count++;
                     }
@@ -219,7 +241,7 @@ namespace tetris
                         speed -= 100;
                     for (int t = i; t > 1; t--)
                         for (int j = 1; j < width - 1; j++)
-                            matrix[t, j] = matrix[t - 1, j];
+                            matrix.Point(j, t, matrix.CheckPoint(j, t - 1));
                     score += width;
                 }
             }
